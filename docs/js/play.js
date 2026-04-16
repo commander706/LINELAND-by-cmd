@@ -428,7 +428,7 @@ export class PlayEngine {
         }
 
         // ★ SPEEDにdtをかける（60FPS環境でちょうど良くなるよう、7.0くらいに上げるのがオススメです）
-        const SPEED = 7.0 * dt; 
+        const SPEED = 5.0 * dt; 
         const ALLOWED_DIST = 20;
 
         if (!this.isCleared) {
