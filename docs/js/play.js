@@ -28,7 +28,7 @@ class Particle {
         if (this.life <= 0) return;
         ctx.globalAlpha = this.life;
         ctx.fillStyle = this.color;
-        ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
         ctx.globalAlpha = 1.0;
     }
 }
@@ -39,30 +39,30 @@ export class PlayEngine {
         this.ctx = this.canvas.getContext('2d');
         this.ui = ui;
         this.audioManager = audioManager;
-        
-        this.cellSize = 140; 
+
+        this.cellSize = 140;
         this.cols = 7;
         this.rows = 5;
         this.logicWidth = this.cols * this.cellSize;
         this.logicHeight = this.rows * this.cellSize;
 
         this.resizeCanvas();
-        
-        this.grid =[];
+
+        this.grid = [];
         this.player = null;
-        this.particles =[];
+        this.particles = [];
         this.keys = {};
-        
+
         this.isRunning = false;
         this.isCleared = false;
         this.clearFlash = 0;
         this.animId = null;
         this.elapsedTime = 0;
         this.startTime = null;
-        
+
         this.initialData = null;
         this.isTestMode = false;
-        
+
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.handleKeyUp = this.handleKeyUp.bind(this);
     }
@@ -80,18 +80,18 @@ export class PlayEngine {
         this.initialData = JSON.parse(JSON.stringify(data));
         this.grid = JSON.parse(JSON.stringify(data.grid));
         this.player = null;
-        this.particles =[];
+        this.particles = [];
         this.keys = {};
-        
-        for(let r = 0; r < this.rows; r++) {
-            for(let c = 0; c < this.cols; c++) {
+
+        for (let r = 0; r < this.rows; r++) {
+            for (let c = 0; c < this.cols; c++) {
                 if (this.grid[r][c].type === 'player') {
                     this.player = {
                         x: c, y: r,
-                        px: c * this.cellSize + this.cellSize/2,
-                        py: r * this.cellSize + this.cellSize/2,
-                        drawX: c * this.cellSize + this.cellSize/2,
-                        drawY: r * this.cellSize + this.cellSize/2,
+                        px: c * this.cellSize + this.cellSize / 2,
+                        py: r * this.cellSize + this.cellSize / 2,
+                        drawX: c * this.cellSize + this.cellSize / 2,
+                        drawY: r * this.cellSize + this.cellSize / 2,
                         vx: 0, vy: 0,
                         prevColor: this.grid[r][c].color,
                         targetColor: this.grid[r][c].color,
@@ -101,12 +101,12 @@ export class PlayEngine {
                 }
             }
         }
-        
+
         if (!this.player) {
             this.ui.showToast("プレイヤーが配置されていません");
             return false;
         }
-        
+
         this.isCleared = false;
         this.clearFlash = 0;
         this.elapsedTime = 0;
@@ -144,23 +144,24 @@ export class PlayEngine {
 
     start() {
         if (!this.player) return;
-        if (this.isRunning) return; 
-        
+        if (this.isRunning) return;
+
         this.isRunning = true;
-        this.startTime = Date.now(); 
-        
+        this.startTime = Date.now();
+
+        this.lastTime = performance.now(); // ★これを追加
+
         window.addEventListener('keydown', this.handleKeyDown);
         window.addEventListener('keyup', this.handleKeyUp);
 
         this.loop();
     }
-
     stop() {
         this.isRunning = false;
         window.removeEventListener('keydown', this.handleKeyDown);
         window.removeEventListener('keyup', this.handleKeyUp);
-        
-        if (this.animId) { 
+
+        if (this.animId) {
             cancelAnimationFrame(this.animId);
             this.animId = null;
         }
@@ -169,15 +170,15 @@ export class PlayEngine {
 
     spawnColorParticles(x, y, color) {
         if (color === '#333333' || color === '#ffffff') return;
-        for(let i=0; i<15; i++) {
+        for (let i = 0; i < 15; i++) {
             this.particles.push(new Particle(x, y, color, 'normal'));
         }
     }
 
     spawnFireworks(x, y) {
-        const colors =['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
-        for(let i=0; i<80; i++) {
-            this.particles.push(new Particle(x, y, colors[Math.floor(Math.random()*colors.length)], 'firework'));
+        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+        for (let i = 0; i < 80; i++) {
+            this.particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], 'firework'));
         }
     }
 
@@ -192,9 +193,9 @@ export class PlayEngine {
         const key = e.key.toLowerCase();
         this.keys[key] = true;
         this.keys[e.key] = true;
-        
+
         if (key === 'r') {
-            this.stop(); 
+            this.stop();
             this.resetLevel(() => {
                 this.start();
             });
@@ -223,17 +224,17 @@ export class PlayEngine {
     changeSocketColor(x, y, newColor) {
         const tile = this.grid[y][x];
         tile.color = newColor;
-        const cx = x * this.cellSize + this.cellSize/2;
-        const cy = y * this.cellSize + this.cellSize/2;
+        const cx = x * this.cellSize + this.cellSize / 2;
+        const cy = y * this.cellSize + this.cellSize / 2;
         this.spawnColorParticles(cx, cy, newColor);
 
         if (tile.socketId) {
-            for(let r=0; r<this.rows; r++) {
-                for(let c=0; c<this.cols; c++) {
+            for (let r = 0; r < this.rows; r++) {
+                for (let c = 0; c < this.cols; c++) {
                     const t = this.grid[r][c];
                     if (t.type === 'color_socket' && t.socketId === tile.socketId && (c !== x || r !== y)) {
                         t.color = newColor;
-                        this.spawnColorParticles(c * this.cellSize + this.cellSize/2, r * this.cellSize + this.cellSize/2, newColor);
+                        this.spawnColorParticles(c * this.cellSize + this.cellSize / 2, r * this.cellSize + this.cellSize / 2, newColor);
                     }
                 }
             }
@@ -244,11 +245,11 @@ export class PlayEngine {
         const gridX = Math.floor(this.player.px / this.cellSize);
         const gridY = Math.floor(this.player.py / this.cellSize);
         if (gridX < 0 || gridX >= this.cols || gridY < 0 || gridY >= this.rows) return;
-        
+
         const tile = this.grid[gridY][gridX];
-        
+
         if (tile.type === 'color_socket') {
-            if (tile.color === '#333333') { 
+            if (tile.color === '#333333') {
                 if (this.player.targetColor !== '#333333') {
                     this.changeSocketColor(gridX, gridY, this.player.targetColor);
                     this.changePlayerColor('#333333');
@@ -277,13 +278,13 @@ export class PlayEngine {
     mixTwo(c1, c2) {
         if (c1 === '#333333') return c2;
         if (c2 === '#333333') return c1;
-        const pairs = [['#ff0000', '#0000ff', '#800080'],['#ff0000', '#ffff00', '#ffa500'],['#0000ff', '#ffff00', '#00ff00']];
+        const pairs = [['#ff0000', '#0000ff', '#800080'], ['#ff0000', '#ffff00', '#ffa500'], ['#0000ff', '#ffff00', '#00ff00']];
         for (let p of pairs) {
             if ((c1 === p[0] && c2 === p[1]) || (c1 === p[1] && c2 === p[0])) return p[2];
         }
-        const r1 = parseInt(c1.substr(1,2),16), g1 = parseInt(c1.substr(3,2),16), b1 = parseInt(c1.substr(5,2),16);
-        const r2 = parseInt(c2.substr(1,2),16), g2 = parseInt(c2.substr(3,2),16), b2 = parseInt(c2.substr(5,2),16);
-        return '#' +[(r1+r2)>>1, (g1+g2)>>1, (b1+b2)>>1].map(x=>x.toString(16).padStart(2,'0')).join('');
+        const r1 = parseInt(c1.substr(1, 2), 16), g1 = parseInt(c1.substr(3, 2), 16), b1 = parseInt(c1.substr(5, 2), 16);
+        const r2 = parseInt(c2.substr(1, 2), 16), g2 = parseInt(c2.substr(3, 2), 16), b2 = parseInt(c2.substr(5, 2), 16);
+        return '#' + [(r1 + r2) >> 1, (g1 + g2) >> 1, (b1 + b2) >> 1].map(x => x.toString(16).padStart(2, '0')).join('');
     }
 
     reverseColor(c) {
@@ -294,17 +295,17 @@ export class PlayEngine {
             '#0000ff': '#ffa500', '#ffa500': '#0000ff'
         };
         if (revs[c]) return revs[c];
-        const r = parseInt(c.substr(1,2),16), g = parseInt(c.substr(3,2),16), b = parseInt(c.substr(5,2),16);
-        return '#' +[255-r, 255-g, 255-b].map(x=>x.toString(16).padStart(2,'0')).join('');
+        const r = parseInt(c.substr(1, 2), 16), g = parseInt(c.substr(3, 2), 16), b = parseInt(c.substr(5, 2), 16);
+        return '#' + [255 - r, 255 - g, 255 - b].map(x => x.toString(16).padStart(2, '0')).join('');
     }
 
     lerpHex(c1, c2, t) {
-        const r1 = parseInt(c1.substr(1,2),16), g1 = parseInt(c1.substr(3,2),16), b1 = parseInt(c1.substr(5,2),16);
-        const r2 = parseInt(c2.substr(1,2),16), g2 = parseInt(c2.substr(3,2),16), b2 = parseInt(c2.substr(5,2),16);
-        const r = Math.round(r1 + (r2-r1)*t);
-        const g = Math.round(g1 + (g2-g1)*t);
-        const b = Math.round(b1 + (b2-b1)*t);
-        return '#' +[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('');
+        const r1 = parseInt(c1.substr(1, 2), 16), g1 = parseInt(c1.substr(3, 2), 16), b1 = parseInt(c1.substr(5, 2), 16);
+        const r2 = parseInt(c2.substr(1, 2), 16), g2 = parseInt(c2.substr(3, 2), 16), b2 = parseInt(c2.substr(5, 2), 16);
+        const r = Math.round(r1 + (r2 - r1) * t);
+        const g = Math.round(g1 + (g2 - g1) * t);
+        const b = Math.round(b1 + (b2 - b1) * t);
+        return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
     }
 
     checkGoal(gridX, gridY) {
@@ -313,29 +314,29 @@ export class PlayEngine {
             this.isCleared = true;
             this.elapsedTime = Date.now() - this.startTime; // 確定
             this.clearFlash = 1;
-            
-            this.player.px = gridX * this.cellSize + this.cellSize/2;
-            this.player.py = gridY * this.cellSize + this.cellSize/2;
+
+            this.player.px = gridX * this.cellSize + this.cellSize / 2;
+            this.player.py = gridY * this.cellSize + this.cellSize / 2;
             this.player.vx = 0;
             this.player.vy = 0;
 
             this.audioManager.play('se_complete');
             document.getElementById('play-clear-overlay').style.display = 'flex';
-            
+
             const chars = document.querySelectorAll('.clear-char');
             chars.forEach((char, i) => {
                 char.classList.remove('show');
                 setTimeout(() => {
                     char.classList.add('show');
-                }, i * 80); 
+                }, i * 80);
             });
 
             const testBtns = document.getElementById('play-clear-buttons-test');
             const normalBtns = document.getElementById('play-clear-buttons-normal');
-            
+
             testBtns.classList.remove('show');
             normalBtns.classList.remove('show');
-            
+
             testBtns.style.display = this.isTestMode ? 'flex' : 'none';
             normalBtns.style.display = this.isTestMode ? 'none' : 'flex';
 
@@ -349,7 +350,7 @@ export class PlayEngine {
     }
 
     drawConnections(time) {
-        const connections =[];
+        const connections = [];
         for (let r = 0; r < this.rows; r++) {
             for (let c = 0; c < this.cols; c++) {
                 const t = this.grid[r][c];
@@ -382,10 +383,10 @@ export class PlayEngine {
                     this.ctx.beginPath();
                     this.ctx.moveTo(x1, y1);
 
-                    const segments = Math.floor(dist / 3); 
-                    const wavelength = 55; 
-                    const amplitude = 12;  
-                    const speed = time * 3.0; 
+                    const segments = Math.floor(dist / 3);
+                    const wavelength = 55;
+                    const amplitude = 12;
+                    const speed = time * 3.0;
 
                     for (let k = 1; k <= segments; k++) {
                         const t = k / segments;
@@ -402,11 +403,22 @@ export class PlayEngine {
         }
     }
 
-    loop() {
+    // loopの引数にcurrentTimeを追加
+    loop(currentTime) { 
         if (!this.isRunning) return;
 
+        // ★ ここからデルタタイム（dt）の計算を追加
+        if (!this.lastTime) this.lastTime = currentTime || performance.now();
+        const now = currentTime || performance.now();
+        let dt = (now - this.lastTime) / (1000 / 60); // 60FPSを基準(1.0)とする
+        this.lastTime = now;
+        
+        if (dt > 3) dt = 3; // カクつき防止
+        if (dt <= 0) dt = 1;
+        // ★ ここまで
+
         if (this.player.colorProgress < 1) {
-            this.player.colorProgress += 0.05;
+            this.player.colorProgress += 0.05 * dt; // ★ dtをかける
             if (this.player.colorProgress >= 1) {
                 this.player.colorProgress = 1;
                 this.player.currentColor = this.player.targetColor;
@@ -415,7 +427,8 @@ export class PlayEngine {
             }
         }
 
-        const SPEED = 5.0; 
+        // ★ SPEEDにdtをかける（60FPS環境でちょうど良くなるよう、7.0くらいに上げるのがオススメです）
+        const SPEED = 7.0 * dt; 
         const ALLOWED_DIST = 20;
 
         if (!this.isCleared) {
@@ -440,7 +453,7 @@ export class PlayEngine {
             if (reqDx !== 0 || reqDy !== 0) {
                 if (this.player.vx === 0 && this.player.vy === 0) {
                     if (this.canMoveTo(gridX + reqDx, gridY + reqDy)) {
-                        this.player.px = centerX; 
+                        this.player.px = centerX;
                         this.player.py = centerY;
                         this.player.vx = reqDx;
                         this.player.vy = reqDy;
@@ -465,9 +478,9 @@ export class PlayEngine {
                 const nextPy = this.player.py + this.player.vy * SPEED;
 
                 const isCrossingCenter = (this.player.vx > 0 && this.player.px <= centerX && nextPx >= centerX) ||
-                                         (this.player.vx < 0 && this.player.px >= centerX && nextPx <= centerX) ||
-                                         (this.player.vy > 0 && this.player.py <= centerY && nextPy >= centerY) ||
-                                         (this.player.vy < 0 && this.player.py >= centerY && nextPy <= centerY);
+                    (this.player.vx < 0 && this.player.px >= centerX && nextPx <= centerX) ||
+                    (this.player.vy > 0 && this.player.py <= centerY && nextPy >= centerY) ||
+                    (this.player.vy < 0 && this.player.py >= centerY && nextPy <= centerY);
 
                 if (isCrossingCenter) {
                     this.player.px = centerX;
@@ -521,14 +534,15 @@ export class PlayEngine {
         }
 
         this.draw();
-        this.animId = requestAnimationFrame(() => this.loop()); 
+        // ★ 最後に (t) => を追加して時間を渡すように変更
+        this.animId = requestAnimationFrame((t) => this.loop(t)); 
     }
 
     draw() {
         const time = performance.now() * 0.004;
-        
+
         const dpr = window.devicePixelRatio || 1;
-        if (this.canvas.width !== Math.floor(this.logicWidth * dpr) || 
+        if (this.canvas.width !== Math.floor(this.logicWidth * dpr) ||
             this.canvas.height !== Math.floor(this.logicHeight * dpr)) {
             this.resizeCanvas();
         }
@@ -543,15 +557,15 @@ export class PlayEngine {
 
         const pathWidth = 12;
 
-        for(let y = 0; y < this.rows; y++) {
-            for(let x = 0; x < this.cols; x++) {
+        for (let y = 0; y < this.rows; y++) {
+            for (let x = 0; x < this.cols; x++) {
                 const tile = this.grid[y][x];
                 if (tile.type === 'empty') continue;
 
-                const cx = x * this.cellSize + this.cellSize/2;
-                const cy = y * this.cellSize + this.cellSize/2;
+                const cx = x * this.cellSize + this.cellSize / 2;
+                const cy = y * this.cellSize + this.cellSize / 2;
 
-                this.ctx.strokeStyle = '#ffffff'; 
+                this.ctx.strokeStyle = '#ffffff';
                 this.ctx.lineWidth = pathWidth;
                 this.ctx.lineCap = 'square';
 
@@ -561,36 +575,36 @@ export class PlayEngine {
                 };
 
                 this.ctx.beginPath();
-                if (connects(x, y-1)) { this.ctx.moveTo(cx, cy); this.ctx.lineTo(cx, cy - this.cellSize/2); }
-                if (connects(x, y+1)) { this.ctx.moveTo(cx, cy); this.ctx.lineTo(cx, cy + this.cellSize/2); }
-                if (connects(x-1, y)) { this.ctx.moveTo(cx, cy); this.ctx.lineTo(cx - this.cellSize/2, cy); }
-                if (connects(x+1, y)) { this.ctx.moveTo(cx, cy); this.ctx.lineTo(cx + this.cellSize/2, cy); }
+                if (connects(x, y - 1)) { this.ctx.moveTo(cx, cy); this.ctx.lineTo(cx, cy - this.cellSize / 2); }
+                if (connects(x, y + 1)) { this.ctx.moveTo(cx, cy); this.ctx.lineTo(cx, cy + this.cellSize / 2); }
+                if (connects(x - 1, y)) { this.ctx.moveTo(cx, cy); this.ctx.lineTo(cx - this.cellSize / 2, cy); }
+                if (connects(x + 1, y)) { this.ctx.moveTo(cx, cy); this.ctx.lineTo(cx + this.cellSize / 2, cy); }
                 this.ctx.stroke();
-                
+
                 this.ctx.fillStyle = '#ffffff';
-                this.ctx.fillRect(cx - pathWidth/2, cy - pathWidth/2, pathWidth, pathWidth);
+                this.ctx.fillRect(cx - pathWidth / 2, cy - pathWidth / 2, pathWidth, pathWidth);
             }
         }
 
-        for(let y = 0; y < this.rows; y++) {
-            for(let x = 0; x < this.cols; x++) {
+        for (let y = 0; y < this.rows; y++) {
+            for (let x = 0; x < this.cols; x++) {
                 const tile = this.grid[y][x];
                 if (tile.type === 'empty' || tile.type === 'path' || tile.type === 'player') continue;
 
-                const cx = x * this.cellSize + this.cellSize/2;
-                const cy = y * this.cellSize + this.cellSize/2;
+                const cx = x * this.cellSize + this.cellSize / 2;
+                const cy = y * this.cellSize + this.cellSize / 2;
 
                 if (tile.type === 'goal') {
                     const pulse = Math.sin(time * 6) * 0.5 + 0.5;
-                    this.ctx.fillStyle = '#050505'; 
+                    this.ctx.fillStyle = '#050505';
                     this.ctx.fillRect(cx - 60, cy - 60, 120, 120);
-                    
+
                     this.ctx.save();
                     this.ctx.shadowBlur = 15 + 25 * pulse;
                     this.ctx.shadowColor = tile.color;
-                    this.ctx.strokeStyle = tile.color; 
-                    this.ctx.lineWidth = 8 + 4 * pulse; 
-                    this.ctx.strokeRect(cx - 56 - 4*pulse, cy - 56 - 4*pulse, 112 + 8*pulse, 112 + 8*pulse);
+                    this.ctx.strokeStyle = tile.color;
+                    this.ctx.lineWidth = 8 + 4 * pulse;
+                    this.ctx.strokeRect(cx - 56 - 4 * pulse, cy - 56 - 4 * pulse, 112 + 8 * pulse, 112 + 8 * pulse);
                     this.ctx.restore();
                 } else if (tile.type === 'color_pass') {
                     this.ctx.fillStyle = '#050505';
@@ -599,22 +613,22 @@ export class PlayEngine {
                     this.ctx.fillStyle = tile.color;
                     this.ctx.beginPath(); this.ctx.moveTo(cx, cy - 28); this.ctx.lineTo(cx + 28, cy); this.ctx.lineTo(cx, cy + 28); this.ctx.lineTo(cx - 28, cy); this.ctx.closePath(); this.ctx.fill();
                 } else if (tile.type === 'color_socket') {
-                    this.ctx.fillStyle = '#050505'; this.ctx.beginPath(); this.ctx.arc(cx, cy, 60, 0, Math.PI*2); this.ctx.fill();
-                    this.ctx.strokeStyle = '#ffffff'; this.ctx.lineWidth = 8; this.ctx.beginPath(); this.ctx.arc(cx, cy, 62, 0, Math.PI*2); this.ctx.stroke();
-                    this.ctx.strokeStyle = tile.color; this.ctx.lineWidth = 16; this.ctx.beginPath(); this.ctx.arc(cx, cy, 48, 0, Math.PI*2); this.ctx.stroke();
-                    this.ctx.strokeStyle = '#ffffff'; this.ctx.lineWidth = 8; this.ctx.beginPath(); this.ctx.arc(cx, cy, 36, 0, Math.PI*2); this.ctx.stroke();
+                    this.ctx.fillStyle = '#050505'; this.ctx.beginPath(); this.ctx.arc(cx, cy, 60, 0, Math.PI * 2); this.ctx.fill();
+                    this.ctx.strokeStyle = '#ffffff'; this.ctx.lineWidth = 8; this.ctx.beginPath(); this.ctx.arc(cx, cy, 62, 0, Math.PI * 2); this.ctx.stroke();
+                    this.ctx.strokeStyle = tile.color; this.ctx.lineWidth = 16; this.ctx.beginPath(); this.ctx.arc(cx, cy, 48, 0, Math.PI * 2); this.ctx.stroke();
+                    this.ctx.strokeStyle = '#ffffff'; this.ctx.lineWidth = 8; this.ctx.beginPath(); this.ctx.arc(cx, cy, 36, 0, Math.PI * 2); this.ctx.stroke();
                 } else if (tile.type === 'vision_reverser') {
-                    this.ctx.fillStyle = '#050505'; this.ctx.beginPath(); this.ctx.arc(cx, cy, 56, 0, Math.PI*2); this.ctx.fill();
-                    this.ctx.strokeStyle = '#ffffff'; this.ctx.lineWidth = 20; this.ctx.beginPath(); this.ctx.arc(cx, cy, 50, 0, Math.PI*2); this.ctx.stroke();
+                    this.ctx.fillStyle = '#050505'; this.ctx.beginPath(); this.ctx.arc(cx, cy, 56, 0, Math.PI * 2); this.ctx.fill();
+                    this.ctx.strokeStyle = '#ffffff'; this.ctx.lineWidth = 20; this.ctx.beginPath(); this.ctx.arc(cx, cy, 50, 0, Math.PI * 2); this.ctx.stroke();
                 }
             }
         }
 
         this.ctx.fillStyle = this.player.currentColor;
-        this.ctx.beginPath(); this.ctx.arc(this.player.drawX, this.player.drawY, 36, 0, Math.PI*2); this.ctx.fill();
+        this.ctx.beginPath(); this.ctx.arc(this.player.drawX, this.player.drawY, 36, 0, Math.PI * 2); this.ctx.fill();
         this.ctx.strokeStyle = '#ffffff';
         this.ctx.lineWidth = 8;
-        this.ctx.beginPath(); this.ctx.arc(this.player.drawX, this.player.drawY, 40, 0, Math.PI*2); this.ctx.stroke();
+        this.ctx.beginPath(); this.ctx.arc(this.player.drawX, this.player.drawY, 40, 0, Math.PI * 2); this.ctx.stroke();
 
         this.particles.forEach(p => p.draw(this.ctx));
 
