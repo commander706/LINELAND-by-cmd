@@ -188,6 +188,8 @@ export class LevelSelectEngine {
         this.previewAlpha = 0;
         this.keys = {};
         this.particles =[];
+
+        this.lastTime = performance.now(); // ★これを追加
         
         window.addEventListener('keydown', this.handleKeyDown);
         window.addEventListener('keyup', this.handleKeyUp);
@@ -240,12 +242,21 @@ export class LevelSelectEngine {
         this.keys[e.key] = false;
     }
 
-    loop() {
+    loop(currentTime) { 
         if (!this.isRunning) return;
+
+        // ★ デルタタイム計算を追加
+        if (!this.lastTime) this.lastTime = currentTime || performance.now();
+        const now = currentTime || performance.now();
+        let dt = (now - this.lastTime) / (1000 / 60);
+        this.lastTime = now;
+        if (dt > 3) dt = 3;
+        if (dt <= 0) dt = 1;
+
         const time = performance.now();
 
         if (this.pathAnimProgress < 1) {
-            this.pathAnimProgress += 0.015;
+            this.pathAnimProgress += 0.015 * dt; // ★ dtをかける
             
             // パーティクル生成 (アニメーション中)
             if (this.lastMaxAccessible !== undefined) {
@@ -267,13 +278,15 @@ export class LevelSelectEngine {
             if(this.particles[i].life <= 0) this.particles.splice(i, 1);
         }
 
-        const SPEED = 5.0; // 変更: 8.0 -> 5.0
+        const SPEED = 5.0; // ベース速度はそのまま
         let reqDx = 0;
         if (this.keys['a'] || this.keys['arrowleft']) reqDx = -1;
         if (this.keys['d'] || this.keys['arrowright']) reqDx = 1;
 
-        this.player.vx += (reqDx * SPEED - this.player.vx) * 0.2;
-        this.player.x += this.player.vx;
+        // ★ 摩擦と移動距離にdtを適用する
+        const friction = Math.min(0.2 * dt, 1.0);
+        this.player.vx += (reqDx * SPEED - this.player.vx) * friction;
+        this.player.x += this.player.vx * dt;
 
         const maxDist = this.maxAccessible * this.nodeSpacing;
         if (this.player.x < 0) { this.player.x = 0; this.player.vx = 0; }
@@ -284,19 +297,23 @@ export class LevelSelectEngine {
             const barrierX = this.levels[18].x - 120;
             if (this.player.x > barrierX) {
                 this.player.x = barrierX;
-                this.player.vx = -15; // 弾く
+                this.player.vx = -15; 
             }
         }
 
-        this.cameraX += (this.player.x - this.cameraX) * 0.1;
+        // ★ カメラの追従にもdtを適用
+        const camFriction = Math.min(0.1 * dt, 1.0);
+        this.cameraX += (this.player.x - this.cameraX) * camFriction;
 
         let hovered = -1;
         for (let i = 0; i <= this.maxAccessible; i++) {
             const lvl = this.levels[i];
-            if (Math.abs(this.player.x - lvl.x) < 60) { // 変更: 30 -> 60
+            if (Math.abs(this.player.x - lvl.x) < 60) {
                 hovered = i;
                 if (Math.abs(this.player.vx) < 1.0 && reqDx === 0) {
-                    this.player.x += (lvl.x - this.player.x) * 0.2;
+                    // ★ 吸着処理にもdtを適用
+                    const snapFriction = Math.min(0.2 * dt, 1.0);
+                    this.player.x += (lvl.x - this.player.x) * snapFriction;
                 }
                 break;
             }
@@ -328,7 +345,8 @@ export class LevelSelectEngine {
         }
 
         this.draw(time);
-        this.animId = requestAnimationFrame(() => this.loop());
+        // ★ 最後に (t) => を追加して時間を渡すように変更
+        this.animId = requestAnimationFrame((t) => this.loop(t)); 
     }
 
     drawPreview(level, alpha) {
