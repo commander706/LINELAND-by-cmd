@@ -126,12 +126,12 @@ export class LevelSelectEngine {
         return `${min.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}.${mill.toString().padStart(2,'0')}`;
     }
 
-    loadLevels(loadedLevels) {
+   loadLevels(loadedLevels) {
         this.levels =[];
-        const validLevels = loadedLevels.filter(d => d !== null);
+        // filterで詰めるとロード失敗時にステージ順がズレるため、直接インデックスを参照する
         
         for (let i = 0; i < 18; i++) {
-            let data = validLevels[i];
+            let data = loadedLevels[i];
             if (!data) {
                 const grid = Array.from({length: 5}, () => Array.from({length: 7}, () => ({type: 'empty', color: '#333333'})));
                 grid[2][1] = {type: 'player', color: '#ff0000'};
@@ -140,12 +140,13 @@ export class LevelSelectEngine {
                 grid[2][4] = {type: 'path', color: '#333333'};
                 grid[2][5] = {type: 'goal', color: '#333333'};
                 data = {
-                    id: `main_${i}`, title: `MAIN STAGE ${i+1}`, subtitle: 'Dummy Level Data',
+                    title: `MAIN STAGE ${i+1}`, subtitle: 'Dummy Level Data',
                     author: 'System', comment: '', data: { grid: grid }
                 };
             }
             this.levels.push({
-                id: data.id || `main_${i}`,
+                // ★修正: iではなく i+1 にすることで、main_1 から main_18 まで割り振る
+                id: `main_${i+1}`,
                 title: data.title || `STAGE ${i+1}`,
                 subtitle: data.subtitle || '',
                 author: data.author || 'UNKNOWN',
