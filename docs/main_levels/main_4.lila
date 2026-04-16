@@ -1,0 +1,197 @@
+{
+  "id": "1776361604493",
+  "title": "ステージ4",
+  "subtitle": "カラー・ソケット",
+  "author": "駒金",
+  "comment": "カラーソケットにある色はあなたの色を変えるだろう。",
+  "updatedAt": "2026/04/17 03:53",
+  "data": {
+    "grid": [
+      [
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "color_socket",
+          "color": "#00ff00",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        }
+      ],
+      [
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        }
+      ],
+      [
+        {
+          "type": "player",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "color_pass",
+          "color": "#00ff00",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        }
+      ],
+      [
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        }
+      ],
+      [
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "goal",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        }
+      ]
+    ]
+  }
+}

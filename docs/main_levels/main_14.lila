@@ -1,0 +1,197 @@
+{
+  "id": "1776361604493",
+  "title": "ステージ14",
+  "subtitle": "逆転の補色",
+  "author": "駒金",
+  "comment": "カラー・リバーサーはあなたの色を補色するだろう。",
+  "updatedAt": "2026/04/17 04:09",
+  "data": {
+    "grid": [
+      [
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": "1"
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#ffff00",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        }
+      ],
+      [
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "vision_reverser",
+          "color": "#ffffff",
+          "socketId": "1"
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": "2"
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": "1"
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        }
+      ],
+      [
+        {
+          "type": "player",
+          "color": "#ff0000",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": "2"
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "color_pass",
+          "color": "#ffff00",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "goal",
+          "color": "#333333",
+          "socketId": ""
+        }
+      ],
+      [
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": "1"
+        },
+        {
+          "type": "color_socket",
+          "color": "#0000ff",
+          "socketId": "1"
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        }
+      ],
+      [
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": "1"
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": "2"
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": "1"
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": "2"
+        }
+      ]
+    ]
+  }
+}
