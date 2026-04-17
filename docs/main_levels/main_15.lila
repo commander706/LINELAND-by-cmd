@@ -1,0 +1,197 @@
+{
+  "id": "1776361604493",
+  "title": "ステージ15",
+  "subtitle": "逆転の接合点",
+  "author": "駒金",
+  "comment": "",
+  "updatedAt": "2026/04/17 04:11",
+  "data": {
+    "grid": [
+      [
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "vision_reverser",
+          "color": "#ffffff",
+          "socketId": "1"
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#ffff00",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        }
+      ],
+      [
+        {
+          "type": "player",
+          "color": "#ff0000",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": "1"
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": "2"
+        },
+        {
+          "type": "color_socket",
+          "color": "#333333",
+          "socketId": "1"
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "color_socket",
+          "color": "#333333",
+          "socketId": ""
+        }
+      ],
+      [
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "color_socket",
+          "color": "#ffff00",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "color_pass",
+          "color": "#00ff00",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        }
+      ],
+      [
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": "1"
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": "1"
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        }
+      ],
+      [
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "goal",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "color_pass",
+          "color": "#800080",
+          "socketId": "1"
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": "2"
+        },
+        {
+          "type": "color_socket",
+          "color": "#333333",
+          "socketId": "1"
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "color_socket",
+          "color": "#333333",
+          "socketId": ""
+        }
+      ]
+    ]
+  }
+}

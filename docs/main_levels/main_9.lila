@@ -1,0 +1,197 @@
+{
+  "id": "1776361604493",
+  "title": "ステージ9",
+  "subtitle": "接続ソケット",
+  "author": "駒金",
+  "comment": "カラーソケットは接続されている場合がある。",
+  "updatedAt": "2026/04/17 04:00",
+  "data": {
+    "grid": [
+      [
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        }
+      ],
+      [
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "color_pass",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "color_pass",
+          "color": "#ff0000",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        }
+      ],
+      [
+        {
+          "type": "player",
+          "color": "#ff0000",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "goal",
+          "color": "#333333",
+          "socketId": ""
+        }
+      ],
+      [
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "color_socket",
+          "color": "#333333",
+          "socketId": "1"
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "color_socket",
+          "color": "#333333",
+          "socketId": "1"
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        }
+      ],
+      [
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        }
+      ]
+    ]
+  }
+}

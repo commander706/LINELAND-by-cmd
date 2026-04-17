@@ -1,0 +1,197 @@
+{
+  "id": "1776361604493",
+  "title": "ステージ2",
+  "subtitle": "曲がり道",
+  "author": "駒金",
+  "comment": "あなたが移動できるのは白い線だけだ。",
+  "updatedAt": "2026/04/17 02:48",
+  "data": {
+    "grid": [
+      [
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        }
+      ],
+      [
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        }
+      ],
+      [
+        {
+          "type": "player",
+          "color": "#ffff00",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "goal",
+          "color": "#333333",
+          "socketId": ""
+        }
+      ],
+      [
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        }
+      ],
+      [
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "empty",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        },
+        {
+          "type": "path",
+          "color": "#333333",
+          "socketId": ""
+        }
+      ]
+    ]
+  }
+}
