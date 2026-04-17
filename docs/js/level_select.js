@@ -9,9 +9,9 @@ class LsParticle {
         this.life = 1.0;
         this.decay = Math.random() * 0.03 + 0.02;
     }
-    update() {
-        this.x += this.vx; this.y += this.vy;
-        this.life -= this.decay;
+    update(dt = 1) {
+        this.x += this.vx * dt; this.y += this.vy * dt;
+        this.life -= this.decay * dt;
     }
     draw(ctx) {
         if (this.life <= 0) return;
@@ -29,7 +29,7 @@ export class LevelSelectEngine {
         this.audioManager = audioManager;
         this.onPlayLevel = onPlayLevel;
 
-        this.levels = [];
+        this.levels =[];
         this.isRunning = false;
         this.animId = null;
 
@@ -50,8 +50,8 @@ export class LevelSelectEngine {
         this.maxAccessible = 0;
         this.lastMaxAccessible = undefined;
         this.pathAnimProgress = 1;
-        this.particles = [];
-        this.uiCallback = null; // 全クリア演出用フック
+        this.particles =[];
+        this.uiCallback = null;
 
         this.resizeCanvas();
         window.addEventListener('resize', () => this.resizeCanvas());
@@ -74,7 +74,6 @@ export class LevelSelectEngine {
     updateProgress(progressObj) {
         this.progress = progressObj || {};
         let max = 0;
-        // メインの18ステージのみクリア判定に含める
         for (let i = 0; i < 18; i++) {
             if (this.levels[i] && this.progress[this.levels[i].id]) {
                 max = i + 1;
@@ -85,10 +84,10 @@ export class LevelSelectEngine {
 
         let pendingAllClear = false;
         if (max === 18 && !this.progress['all_cleared_seen']) {
-            pendingAllClear = true; // 演出待機
-            this.maxAccessible = 17; // 演出前は18(index17)で止めておく
+            pendingAllClear = true;
+            this.maxAccessible = 17;
         } else if (max === 18 && this.progress['all_cleared_seen']) {
-            this.maxAccessible = 18; // ステージ19(index 18)への道を開放
+            this.maxAccessible = 18;
         } else {
             this.maxAccessible = max;
         }
@@ -106,9 +105,8 @@ export class LevelSelectEngine {
         };
 
         if (pendingAllClear && this.uiCallback) {
-            // UI側に演出を依頼。完了後にコールバックで呼ばれる
             this.uiCallback(true, () => {
-                this.maxAccessible = 18; // 演出後に19番目を開放
+                this.maxAccessible = 18;
                 triggerAnim();
             });
         } else {
@@ -127,8 +125,7 @@ export class LevelSelectEngine {
     }
 
     loadLevels(loadedLevels) {
-        this.levels = [];
-        // filterで詰めるとロード失敗時にステージ順がズレるため、直接インデックスを参照する
+        this.levels =[];
 
         for (let i = 0; i < 18; i++) {
             let data = loadedLevels[i];
@@ -145,7 +142,6 @@ export class LevelSelectEngine {
                 };
             }
             this.levels.push({
-                // ★修正: iではなく i+1 にすることで、main_1 から main_18 まで割り振る
                 id: `main_${i + 1}`,
                 title: data.title || `STAGE ${i + 1}`,
                 subtitle: data.subtitle || '',
@@ -157,7 +153,6 @@ export class LevelSelectEngine {
             });
         }
 
-        // ダミーステージ (19, 20) を追加
         for (let i = 0; i < 2; i++) {
             this.levels.push({
                 id: `dummy_${19 + i}`,
@@ -187,9 +182,9 @@ export class LevelSelectEngine {
         this.lastHoverNode = -1;
         this.previewAlpha = 0;
         this.keys = {};
-        this.particles = [];
+        this.particles =[];
 
-        this.lastTime = performance.now(); // ★これを追加
+        this.lastTime = performance.now();
 
         window.addEventListener('keydown', this.handleKeyDown);
         window.addEventListener('keyup', this.handleKeyUp);
@@ -224,7 +219,7 @@ export class LevelSelectEngine {
 
         if ((key === 'z' || key === ' ' || key === 'spacebar') && this.currentHoverNode !== -1) {
             if (this.isStarting || this.levels[this.currentHoverNode].isDummy) {
-                if (this.levels[this.currentHoverNode]?.isDummy) this.audioManager.play('se_back'); // ダミーは入れない
+                if (this.levels[this.currentHoverNode]?.isDummy) this.audioManager.play('se_back');
                 return;
             }
             e.preventDefault();
@@ -245,7 +240,6 @@ export class LevelSelectEngine {
     loop(currentTime) {
         if (!this.isRunning) return;
 
-        // ★ デルタタイム計算を追加
         if (!this.lastTime) this.lastTime = currentTime || performance.now();
         const now = currentTime || performance.now();
         let dt = (now - this.lastTime) / (1000 / 60);
@@ -256,9 +250,8 @@ export class LevelSelectEngine {
         const time = performance.now();
 
         if (this.pathAnimProgress < 1) {
-            this.pathAnimProgress += 0.015 * dt; // ★ dtをかける
+            this.pathAnimProgress += 0.015 * dt;
 
-            // パーティクル生成 (アニメーション中)
             if (this.lastMaxAccessible !== undefined) {
                 const px = this.startX + this.levels[this.lastMaxAccessible].x - this.cameraX;
                 const currentX = px + this.nodeSpacing * this.pathAnimProgress;
@@ -274,24 +267,24 @@ export class LevelSelectEngine {
         }
 
         for (let i = this.particles.length - 1; i >= 0; i--) {
-            this.particles[i].update();
+            this.particles[i].update(dt);
             if (this.particles[i].life <= 0) this.particles.splice(i, 1);
         }
 
-        const SPEED = 6.0; // ベース速度はそのまま
+        const SPEED = 10.0; // 移動速度調整
         let reqDx = 0;
         if (this.keys['a'] || this.keys['arrowleft']) reqDx = -1;
         if (this.keys['d'] || this.keys['arrowright']) reqDx = 1;
 
-        const friction = 0.2; // 摩擦（加速の滑らかさ）
-        this.player.vx += (reqDx * SPEED - this.player.vx) * friction;
-        this.player.x += this.player.vx; // * dt を削除
+        // dt を考慮した滑らかな加減速
+        const frictionRate = 1 - Math.pow(0.8, dt);
+        this.player.vx += (reqDx * SPEED - this.player.vx) * frictionRate;
+        this.player.x += this.player.vx * dt;
 
         const maxDist = this.maxAccessible * this.nodeSpacing;
         if (this.player.x < 0) { this.player.x = 0; this.player.vx = 0; }
         if (this.player.x > maxDist) { this.player.x = maxDist; this.player.vx = 0; }
 
-        // ダミー(19)へ行こうとした時の弾き返し
         if (this.levels[18]) {
             const barrierX = this.levels[18].x - 120;
             if (this.player.x > barrierX) {
@@ -300,8 +293,7 @@ export class LevelSelectEngine {
             }
         }
 
-        // ★ カメラの追従にもdtを適用
-        const camFriction = 0.1; // 固定値
+        const camFriction = 1 - Math.pow(0.9, dt);
         this.cameraX += (this.player.x - this.cameraX) * camFriction;
 
         let hovered = -1;
@@ -310,8 +302,7 @@ export class LevelSelectEngine {
             if (Math.abs(this.player.x - lvl.x) < 60) {
                 hovered = i;
                 if (Math.abs(this.player.vx) < 1.0 && reqDx === 0) {
-                    // ★ 吸着処理にもdtを適用
-                    const snapFriction = Math.min(0.2 * dt, 1.0);
+                    const snapFriction = 1 - Math.pow(0.8, dt);
                     this.player.x += (lvl.x - this.player.x) * snapFriction;
                 }
                 break;
@@ -320,7 +311,7 @@ export class LevelSelectEngine {
         this.currentHoverNode = hovered;
 
         if (this.currentHoverNode !== -1) {
-            this.previewAlpha = Math.min(1, this.previewAlpha + 0.05);
+            this.previewAlpha = Math.min(1, this.previewAlpha + 0.05 * dt);
             if (this.lastHoverNode !== this.currentHoverNode) {
                 const lvl = this.levels[this.currentHoverNode];
                 document.getElementById('ls-title').innerText = lvl.title;
@@ -336,7 +327,7 @@ export class LevelSelectEngine {
                 this.audioManager.play('se_change');
             }
         } else {
-            this.previewAlpha = Math.max(0, this.previewAlpha - 0.08);
+            this.previewAlpha = Math.max(0, this.previewAlpha - 0.08 * dt);
             if (this.previewAlpha <= 0) {
                 document.getElementById('ls-info').style.opacity = '0';
                 this.lastHoverNode = -1;
@@ -344,7 +335,6 @@ export class LevelSelectEngine {
         }
 
         this.draw(time);
-        // ★ 最後に (t) => を追加して時間を渡すように変更
         this.animId = requestAnimationFrame((t) => this.loop(t));
     }
 
@@ -525,18 +515,14 @@ export class LevelSelectEngine {
 
         const lineY = this.logicHeight * 0.8;
 
-        // 全レベル分表示
         for (let i = 0; i < this.levels.length; i++) {
             const lvl = this.levels[i];
             const px = this.startX + lvl.x - this.cameraX;
 
-            // 描画範囲を緩和
             if (px + this.nodeSpacing < -100 || px > this.logicWidth + 100) continue;
 
-            // 道の描画
             if (i < this.levels.length - 1) {
                 if (i === 17 && i < this.maxAccessible) {
-                    // バグ道エフェクト (18番目 -> 19番目)
                     this.ctx.lineWidth = 12;
                     this.ctx.beginPath();
                     for (let t = 0; t <= 1; t += 0.02) {
@@ -572,13 +558,12 @@ export class LevelSelectEngine {
                 }
             }
 
-            // 四角形の描画
             this.ctx.fillStyle = '#050505';
             this.ctx.fillRect(px - 43, lineY - 43, 86, 86);
 
             const isCleared = !!this.progress[lvl.id];
             if (lvl.isDummy) {
-                this.ctx.strokeStyle = '#ff0000'; // ダミーは赤
+                this.ctx.strokeStyle = '#ff0000';
                 this.ctx.shadowBlur = 10;
                 this.ctx.shadowColor = '#ff0000';
             } else if (isCleared) {
@@ -589,7 +574,7 @@ export class LevelSelectEngine {
                 this.ctx.strokeStyle = '#ffffff';
                 this.ctx.shadowBlur = 0;
             } else {
-                this.ctx.strokeStyle = '#444444'; // 未到達
+                this.ctx.strokeStyle = '#444444';
                 this.ctx.shadowBlur = 0;
             }
 
