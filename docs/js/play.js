@@ -19,10 +19,10 @@ class Particle {
             this.size = Math.random() * 4 + 2;
         }
     }
-    update() {
-        this.x += this.vx; this.y += this.vy;
-        if (this.type === 'firework') this.vy += 0.1;
-        this.life -= this.decay;
+    update(dt = 1) {
+        this.x += this.vx * dt; this.y += this.vy * dt;
+        if (this.type === 'firework') this.vy += 0.1 * dt;
+        this.life -= this.decay * dt;
     }
     draw(ctx) {
         if (this.life <= 0) return;
@@ -50,9 +50,9 @@ export class PlayEngine {
         window.addEventListener('resize', this.resizeCanvas);
         this.resizeCanvas();
 
-        this.grid = [];
+        this.grid =[];
         this.player = null;
-        this.particles = [];
+        this.particles =[];
         this.keys = {};
 
         this.isRunning = false;
@@ -63,7 +63,7 @@ export class PlayEngine {
         this.startTime = null;
 
         this.currentLevelId = null;
-        this.socketsForHint = [];
+        this.socketsForHint =[];
         this.playerTextTimer = 0;
 
         this.initialData = null;
@@ -98,11 +98,11 @@ export class PlayEngine {
         this.resizeCanvas();
 
         this.player = null;
-        this.particles = [];
+        this.particles =[];
         this.keys = {};
 
         this.currentLevelId = levelInfo ? levelInfo.id : null;
-        this.socketsForHint = [];
+        this.socketsForHint =[];
 
         for (let r = 0; r < this.rows; r++) {
             for (let c = 0; c < this.cols; c++) {
@@ -206,7 +206,7 @@ export class PlayEngine {
     }
 
     spawnFireworks(x, y) {
-        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+        const colors =['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
         for (let i = 0; i < 80; i++) {
             this.particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], 'firework'));
         }
@@ -262,18 +262,18 @@ export class PlayEngine {
 
         const playerColor = this.player.targetColor;
         if (toTile.type === 'color_pass') {
-            const colors = toTile.color ? toTile.color.split(',') : [];
+            const colors = toTile.color ? toTile.color.split(',') :[];
             if (!colors.includes(playerColor)) return false;
         }
         if (toTile.type === 'color_block') {
-            const colors = toTile.color ? toTile.color.split(',') : [];
+            const colors = toTile.color ? toTile.color.split(',') :[];
             if (colors.includes(playerColor)) return false;
         }
         return true;
     }
 
     parseSocketRules(str) {
-        if (!str) return [];
+        if (!str) return[];
         return str.split(',').map(s => {
             const parts = s.split('>');
             if (parts.length === 2) {
@@ -400,7 +400,7 @@ export class PlayEngine {
         const r1 = parseInt(c1.substr(1, 2), 16), g1 = parseInt(c1.substr(3, 2), 16), b1 = parseInt(c1.substr(5, 2), 16);
         const r2 = parseInt(c2.substr(1, 2), 16), g2 = parseInt(c2.substr(3, 2), 16), b2 = parseInt(c2.substr(5, 2), 16);
 
-        return '#' + [(r1 + r2) >> 1, (g1 + g2) >> 1, (b1 + b2) >> 1].map(x => x.toString(16).padStart(2, '0')).join('');
+        return '#' +[(r1 + r2) >> 1, (g1 + g2) >> 1, (b1 + b2) >> 1].map(x => x.toString(16).padStart(2, '0')).join('');
     }
 
     reverseColor(c) {
@@ -417,7 +417,6 @@ export class PlayEngine {
         };
         if (revs[c]) return revs[c];
 
-        // それ以外のカスタム混色などはRYB色相環を用いた計算で正確に反転
         const r = parseInt(c.substr(1, 2), 16);
         const g = parseInt(c.substr(3, 2), 16);
         const b = parseInt(c.substr(5, 2), 16);
@@ -437,15 +436,14 @@ export class PlayEngine {
         h *= 360;
 
         if (s < 0.05) {
-            return '#' + [255 - r, 255 - g, 255 - b].map(x => x.toString(16).padStart(2, '0')).join('');
+            return '#' +[255 - r, 255 - g, 255 - b].map(x => x.toString(16).padStart(2, '0')).join('');
         }
 
         const rgbToRyb = (hIn, vIn) => {
             if (Math.abs(hIn - 300) < 5 && vIn < 0.75) return 300;
 
-            const map = [
-                [0, 0], [15, 30], [30, 60], [60, 120], [90, 150], [120, 180],
-                [180, 210], [240, 240], [300, 330], [360, 360]
+            const map = [[0, 0], [15, 30], [30, 60],[60, 120], [90, 150], [120, 180],
+                [180, 210], [240, 240],[300, 330], [360, 360]
             ];
             for (let i = 0; i < map.length - 1; i++) {
                 if (hIn >= map[i][0] && hIn <= map[i + 1][0]) {
@@ -458,8 +456,8 @@ export class PlayEngine {
 
         const rybToRgb = (rybIn) => {
             const map = [
-                [0, 0], [30, 15], [60, 30], [120, 60], [150, 90], [180, 120],
-                [210, 180], [240, 240], [300, 300], [330, 300], [360, 360]
+                [0, 0], [30, 15],[60, 30], [120, 60], [150, 90],[180, 120],
+                [210, 180],[240, 240], [300, 300], [330, 300],[360, 360]
             ];
             for (let i = 0; i < map.length - 1; i++) {
                 if (rybIn >= map[i][0] && rybIn <= map[i + 1][0]) {
@@ -533,7 +531,7 @@ export class PlayEngine {
     }
 
     rgbToHex(r, g, b) {
-        return '#' + [r, g, b]
+        return '#' +[r, g, b]
             .map(v => Math.max(0, Math.min(255, v)).toString(16).padStart(2, '0'))
             .join('');
     }
@@ -580,7 +578,7 @@ export class PlayEngine {
     }
 
     drawConnections(time) {
-        const sockets = [];
+        const sockets =[];
         for (let r = 0; r < this.rows; r++) {
             for (let c = 0; c < this.cols; c++) {
                 const t = this.grid[r][c];
@@ -660,7 +658,7 @@ export class PlayEngine {
         }
 
         if (this.player.colorProgress < 1) {
-            this.player.colorProgress += 0.1;
+            this.player.colorProgress += 0.1 * dt;
             if (this.player.colorProgress >= 1) {
                 this.player.colorProgress = 1;
                 this.player.currentColor = this.player.targetColor;
@@ -669,7 +667,7 @@ export class PlayEngine {
             }
         }
 
-        const SPEED = 3.5;
+        const SPEED = 8.0; // 移動速度を 3.5 から 6.0 へ変更しサクサク動かせるように
         const ALLOWED_DIST = 20;
 
         if (!this.isCleared) {
@@ -719,8 +717,9 @@ export class PlayEngine {
             }
 
             if (this.player.vx !== 0 || this.player.vy !== 0) {
-                const nextPx = this.player.px + this.player.vx * SPEED;
-                const nextPy = this.player.py + this.player.vy * SPEED;
+                // 移動距離に dt(フレーム間の時間差) を乗算してFPS依存を排除
+                const nextPx = this.player.px + this.player.vx * SPEED * dt;
+                const nextPy = this.player.py + this.player.vy * SPEED * dt;
 
                 const isCrossingCenter = (this.player.vx > 0 && this.player.px <= centerX && nextPx >= centerX) ||
                     (this.player.vx < 0 && this.player.px >= centerX && nextPx <= centerX) ||
@@ -778,15 +777,15 @@ export class PlayEngine {
         this.player.drawY = this.player.py;
 
         for (let i = this.particles.length - 1; i >= 0; i--) {
-            this.particles[i].update();
+            this.particles[i].update(dt);
             if (this.particles[i].life <= 0) this.particles.splice(i, 1);
         }
 
-        this.draw();
+        this.draw(dt);
         this.animId = requestAnimationFrame((t) => this.loop(t));
     }
 
-    draw() {
+    draw(dt = 1) {
         const time = performance.now() * 0.004;
 
         const dpr = window.devicePixelRatio || 1;
@@ -946,21 +945,16 @@ export class PlayEngine {
 
         this.particles.forEach(p => p.draw(this.ctx));
 
-        // --- 追加: 「あなた」テキストのアニメーション ---
         if (this.playerTextTimer < 3000) {
             let alpha = 0;
             if (this.playerTextTimer < 400) {
-                // 点き始めのチカチカ
                 alpha = Math.random() < (this.playerTextTimer / 400) ? 0.8 : 0.1;
             } else if (this.playerTextTimer < 2400) {
-                // 点灯中
                 alpha = 1;
             } else if (this.playerTextTimer < 2800) {
-                // 消えかけのチカチカ
                 let p = 1 - (this.playerTextTimer - 2400) / 400;
                 alpha = Math.random() < p ? 0.8 : 0.1;
             } else {
-                // 消灯
                 alpha = 0;
             }
 
@@ -976,13 +970,10 @@ export class PlayEngine {
             }
         }
 
-        // --- 追加: ステージ4専用のヒントテキスト ---
         if (this.currentLevelId === 'main_4') {
             this.socketsForHint.forEach(pos => {
                 const cx = pos.x * this.cellSize + this.cellSize / 2;
                 const cy = pos.y * this.cellSize + this.cellSize / 2;
-
-                // アルファ値とY座標を時間で揺らして呼吸しているように見せる
                 const waveAlpha = Math.sin(time * 4) * 0.2 + 0.8;
                 const waveY = Math.sin(time * 3) * 5;
 
@@ -1000,7 +991,7 @@ export class PlayEngine {
         if (this.clearFlash > 0) {
             this.ctx.fillStyle = `rgba(255, 255, 0, ${this.clearFlash * 0.3})`;
             this.ctx.fillRect(0, 0, this.logicWidth, this.logicHeight);
-            this.clearFlash -= 0.02;
+            this.clearFlash -= 0.02 * dt;
         }
     }
 }
